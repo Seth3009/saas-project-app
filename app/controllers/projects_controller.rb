@@ -27,7 +27,7 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     @project = Project.new(project_params)
-    @project.users << current_user
+    @project.user << current_user
     respond_to do |format|
       if @project.save
         format.html { redirect_to root_url, notice: 'Project was successfully created.' }
@@ -60,8 +60,8 @@ class ProjectsController < ApplicationController
   end
   
   def users
-    @project_users = (@project.users + (User.where(tenant_id: @tenant.id, is_admin: true))) - [current_user]
-    @other_users = @tenant.users.where(tenant_id: @tenant.id, is_admin: false) - (@project_users + [current_user])
+    @project_users = (@project.user + (User.where(tenant_id: @tenant.id, is_admin: true))) - [current_user]
+    @other_users = @tenant.users.where(is_admin: false) - (@project_users + [current_user])
   end
   
   def add_user
